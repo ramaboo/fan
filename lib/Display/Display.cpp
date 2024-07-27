@@ -14,8 +14,8 @@
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-String displayButtonText = "";
-uint64_t displayButtonTimeout = 0;
+String displayDebugText = "";
+uint64_t displayDebugTimeout = 0;
 
 void displaySetup() {
   Serial.println("Display: Setup");
@@ -45,22 +45,22 @@ void debugDisplay() {
   display.display();
 }
 
-void setButtonText(String text, uint64_t timeout) {
-  displayButtonText = text;
+void setDebugText(String text, uint64_t timeout) {
+  displayDebugText = text;
 
   if (timeout > 0) {
-    displayButtonTimeout = millis() + timeout;
+    displayDebugTimeout = millis() + timeout;
   } else {
-    displayButtonTimeout = 0;
+    displayDebugTimeout = 0;
   }
 }
 
 void displayTimeout() {
   uint64_t now = millis();
 
-  if (displayButtonTimeout > 0 && now > displayButtonTimeout) {
-    displayButtonText = "";
-    displayButtonTimeout = 0;
+  if (displayDebugTimeout > 0 && now > displayDebugTimeout) {
+    displayDebugText = "";
+    displayDebugTimeout = 0;
   }
 }
 
@@ -90,7 +90,7 @@ void displayLoop() {
   display.drawFastHLine(0, 52, 128, SSD1306_WHITE);
 
   display.setCursor(0, 56);
-  display.print(displayButtonText);
+  display.print(displayDebugText);
 
   display.display();
 }

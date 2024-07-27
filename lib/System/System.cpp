@@ -10,7 +10,7 @@ void fanOn(uint64_t timeout) {
   Serial.println("System: Fan On");
   timeout = timeout + millis();
 
-  systemFanTimeout = (timeout > systemFanTimeout) ? timeout : systemFanTimeout;
+  systemFanTimeout = std::max(timeout, systemFanTimeout);
   relayFanOn();
 }
 
@@ -49,7 +49,7 @@ void mistOn(uint64_t timeout) {
   Serial.println("System: Mist On");
   timeout = timeout + millis();
 
-  systemMistTimeout = (timeout > systemMistTimeout) ? timeout : systemMistTimeout;
+  systemMistTimeout = std::max(timeout, systemMistTimeout);
   relayMistOn();
   relayPumpOn();
 }
@@ -58,7 +58,6 @@ void mistOff() {
   Serial.println("System: Mist Off");
   systemMistTimeout = 0;
   relayMistOff();
-  relayPumpOff();
 }
 
 void auxOn() {

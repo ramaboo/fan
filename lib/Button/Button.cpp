@@ -2,6 +2,7 @@
 #include <OneButton.h>
 #include <AnalogButtons.h>
 #include <Display.h>
+#include <Relay.h>
 #include <System.h>
 #include <Menu.h>
 
@@ -26,11 +27,6 @@
 
 #define DISPLAY_TIMEOUT 2000
 
-#define MIST_HOLD_TIMEOUT 10000
-
-#define ON HIGH
-#define OFF LOW
-
 OneButton btnStop = OneButton(BUTTON_STOP, true, false);
 OneButton btnStart = OneButton(BUTTON_START, true, false);
 OneButton btnLight = OneButton(BUTTON_LIGHT, true, false);
@@ -41,107 +37,132 @@ OneButton btnR2 = OneButton(BUTTON_R2, true, false);
 
 void upClick() {
   Serial.println("Button Up: Click");
-  setButtonText("Up Click", DISPLAY_TIMEOUT);
+  setDebugText("Up Click", DISPLAY_TIMEOUT);
   menuUpClick();
 }
 
 void downClick() {
   Serial.println("Button Down: Click");
-  setButtonText("Down Click", DISPLAY_TIMEOUT);
+  setDebugText("Down Click", DISPLAY_TIMEOUT);
   menuDownClick();
 }
 
 void goClick() {
   Serial.println("Button Go: Click");
-  setButtonText("Go Click", DISPLAY_TIMEOUT);
+  setDebugText("Go Click", DISPLAY_TIMEOUT);
   menuGoClick();
 }
 
 void goHold() {
   Serial.println("Button Go: Hold");
-  setButtonText("Go Hold", DISPLAY_TIMEOUT);
+  setDebugText("Go Hold", DISPLAY_TIMEOUT);
   menuGoHold();
 }
 
-AnalogButtons analogButtons(BUTTON_PIN, INPUT, 5, 100);
+AnalogButtons analogButtons(BUTTON_PIN, INPUT, 5, 255);
 
-// With USB cable connected to the computer, the button values are:
-Button btnUpConnected = Button(1900, &upClick);
-Button btnDownConnected = Button(2500, &downClick);
-Button btnGoConnected = Button(3450, &goClick, &goHold);
-
-// Without USB cable:
-Button btnUp = Button(1550, &upClick);
-Button btnDown = Button(2300, &downClick);
-Button btnGo = Button(3300, &goClick, &goHold);
+Button btnUp = Button(1750, &upClick);
+Button btnDown = Button(2400, &downClick);
+Button btnGo = Button(3400, &goClick, &goHold);
 
 void stopClick() {
   Serial.println("Button Stop: Click");
-  setButtonText("Stop Click", DISPLAY_TIMEOUT);
+  setDebugText("Stop Click", DISPLAY_TIMEOUT);
   fanOff();
   pumpOff();
   lightOff();
   mistOff();
+  pumpOff();
 }
 
 void stopHold() {
   Serial.println("Button Stop: Hold");
-  setButtonText("Stop Hold", DISPLAY_TIMEOUT);
+  setDebugText("Stop Hold", DISPLAY_TIMEOUT);
   fanOff();
   pumpOff();
   lightOff();
   mistOff();
+  pumpOff();
   auxOff();
 }
 
 void startClick() {
   Serial.println("Button Start: Click");
-  setButtonText("Start Click", DISPLAY_TIMEOUT);
+  setDebugText("Start Click", DISPLAY_TIMEOUT);
   fanOn(getFanTimeout());
   auxOn();
 }
 
 void startHold() {
   Serial.println("Button Start: Hold");
-  setButtonText("Start Hold", DISPLAY_TIMEOUT);
+  setDebugText("Start Hold", DISPLAY_TIMEOUT);
   fanOn(getFanHoldTimeout());
   auxOn();
 }
 
 void lightClick() {
   Serial.println("Button Light: Click");
-  setButtonText("Light Click", DISPLAY_TIMEOUT);
+  setDebugText("Light Click", DISPLAY_TIMEOUT);
   lightToggle();
 }
 
 void mistClick() {
   Serial.println("Button Mist: Click");
-  setButtonText("Mist Click", DISPLAY_TIMEOUT);
-  mistOn(getMistTimeout());
+  setDebugText("Mist Click", DISPLAY_TIMEOUT);
+
+  if (isMistOff()) {
+    mistOn(getMistTimeout());
+  } else {
+    mistOff();
+  }
 }
 
 void mistHold() {
   Serial.println("Button Mist: Hold");
-  setButtonText("Mist Hold", DISPLAY_TIMEOUT);
+  setDebugText("Mist Hold", DISPLAY_TIMEOUT);
   mistOn(getMistHoldTimeout());
 }
 
 void userClick() {
   Serial.println("Button User: Click");
-  setButtonText("User Click", DISPLAY_TIMEOUT);
-  // TODO
+  setDebugText("User Click", DISPLAY_TIMEOUT);
+
+  fanOn(getFanUserTimeout());
+
+  if (isMistOff()) {
+    mistOn(getMistUserTimeout());
+  } else {
+    mistOff();
+  }
+}
+
+void userHold() {
+  Serial.println("Button User: Hold");
+  setDebugText("User Hold", DISPLAY_TIMEOUT);
+  fanOff();
+  mistOff();
 }
 
 void r1Click() {
   Serial.println("Button R1: Click");
-  setButtonText("R1 Click", DISPLAY_TIMEOUT);
-  // TODO
+  setDebugText("R1 Click", DISPLAY_TIMEOUT);
+
+  if (isMistOff()) {
+    mistOn(getMistRemoteTimeout());
+  } else {
+    mistOff();
+  }
 }
 
 void r2Click() {
   Serial.println("Button R2: Click");
-  setButtonText("R2 Click", DISPLAY_TIMEOUT);
-  // TODO
+  setDebugText("R2 Click", DISPLAY_TIMEOUT);
+
+  if (isFanOff()) {
+    fanOn(getFanRemoteTimeout());
+  } else {
+    fanOff();
+  }
 }
 
 void buttonSetup() {
@@ -154,22 +175,22 @@ void buttonSetup() {
   btnMist.attachClick(mistClick);
   btnMist.attachLongPressStart(mistHold);
   btnUser.attachClick(userClick);
+  btnUser.attachLongPressStart(userHold);
   btnR1.attachClick(r1Click);
   btnR2.attachClick(r2Click);
 
-  analogButtons.add(btnUpConnected);
-  analogButtons.add(btnDownConnected);
-  analogButtons.add(btnGoConnected);
   analogButtons.add(btnUp);
   analogButtons.add(btnDown);
   analogButtons.add(btnGo);
 }
 
-void debugSystemButton() {
+void debugAnalogButton() {
   int buttonValue = analogRead(BUTTON_PIN);
 
-  Serial.print("Button: ");
+  Serial.print("Analog Button: ");
   Serial.println(buttonValue);
+
+  setDebugText("Analog: " + String(buttonValue), 1000);
 }
 
 void buttonLoop() {
@@ -221,4 +242,6 @@ void debugInputs() {
   if (digitalRead(BUTTON_R1) == LOW) {
     Serial.println("Button: R1");
   }
+
+  debugAnalogButton();
 }
