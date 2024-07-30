@@ -128,12 +128,7 @@ void userClick() {
   setDebugText("User Click", DISPLAY_TIMEOUT);
 
   fanOn(getFanUserTimeout());
-
-  if (isMistOff()) {
-    mistOn(getMistUserTimeout());
-  } else {
-    mistOff();
-  }
+  mistOn(getMistUserTimeout());
 }
 
 void userHold() {

@@ -33,15 +33,7 @@ void debugDisplay() {
   display.setCursor(0, 0);
   display.print("8-bit Bunny");
   display.setCursor(0, 10);
-  display.print("XXXX");
-  display.setCursor(0, 20);
-  display.print("XXXX");
-  display.setCursor(0, 30);
-  display.print("XXXX");
-  display.setCursor(0, 40);
   display.print("123456789012345678901");
-  display.setCursor(0, 50);
-  display.print("--------------------");
   display.display();
 }
 

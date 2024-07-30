@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <Preferences.h>
 
-
 #define NUM_ITEMS 9
 #define MAX_TIMEOUT 10800
 
@@ -133,13 +132,21 @@ void menuSetup() {
   menuLoad();
 }
 
+String secondsToTime(int32_t seconds) {
+  int32_t hours = seconds / 3600;
+  int32_t minutes = (seconds % 3600) / 60;
+  int32_t secs = seconds % 60;
+
+  return String(hours) + ":" + String(minutes) + ":" + String(secs);
+}
+
 String menuTitleText() {
   return menuItems[menuIndex].title;
 }
 
 String menuValueText() {
   if (menuItems[menuIndex].display) {
-    return String(menuItems[menuIndex].timeout);
+    return secondsToTime(menuItems[menuIndex].timeout);
   } else {
     return "";
   }

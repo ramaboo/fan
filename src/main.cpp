@@ -13,7 +13,6 @@ void setup() {
   displaySetup();
   buttonSetup();
   relaySetup();
-
   menuLoad();
 }
 
