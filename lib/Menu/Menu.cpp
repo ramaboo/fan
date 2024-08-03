@@ -137,7 +137,9 @@ String secondsToTime(int32_t seconds) {
   int32_t minutes = (seconds % 3600) / 60;
   int32_t secs = seconds % 60;
 
-  return String(hours) + ":" + String(minutes) + ":" + String(secs);
+  char buffer [10];
+  sprintf(buffer, "%02d:%02d:%02d", hours, minutes, secs);
+  return String(buffer);
 }
 
 String menuTitleText() {

@@ -1,0 +1,15 @@
+"filename", "language", "Ini", "Markdown", "nccode", "C++", "comment", "blank", "total"
+"/Users/david/www/fan/README.md", "Markdown", 0, 2, 0, 0, 0, 2, 4
+"/Users/david/www/fan/lib/Button/Button.cpp", "C++", 0, 0, 0, 201, 0, 42, 243
+"/Users/david/www/fan/lib/Button/Button.h", "nccode", 0, 0, 5, 0, 0, 3, 8
+"/Users/david/www/fan/lib/Display/Display.cpp", "C++", 0, 0, 0, 69, 0, 20, 89
+"/Users/david/www/fan/lib/Display/Display.h", "nccode", 0, 0, 5, 0, 0, 4, 9
+"/Users/david/www/fan/lib/Menu/Menu.cpp", "C++", 0, 0, 0, 118, 0, 37, 155
+"/Users/david/www/fan/lib/Menu/Menu.h", "nccode", 0, 0, 17, 0, 0, 6, 23
+"/Users/david/www/fan/lib/Relay/Relay.cpp", "C++", 0, 0, 0, 162, 0, 32, 194
+"/Users/david/www/fan/lib/Relay/Relay.h", "nccode", 0, 0, 27, 0, 0, 10, 37
+"/Users/david/www/fan/lib/System/System.cpp", "C++", 0, 0, 0, 95, 0, 26, 121
+"/Users/david/www/fan/lib/System/System.h", "nccode", 0, 0, 16, 0, 0, 4, 20
+"/Users/david/www/fan/platformio.ini", "Ini", 9, 0, 0, 0, 9, 2, 20
+"/Users/david/www/fan/src/main.cpp", "C++", 0, 0, 0, 21, 1, 6, 28
+"Total", "-", 9, 2, 70, 666, 10, 194, 951
