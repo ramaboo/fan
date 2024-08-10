@@ -10,6 +10,7 @@
 void setup() {
   systemSetup();
   menuSetup();
+  // menuReset();
   displaySetup();
   buttonSetup();
   relaySetup();
@@ -21,7 +22,7 @@ void loop() {
   systemLoop();
   displayLoop();
   delay(LOOP_DELAY);
-  //debugInputs();
+  // debugInputs();
 }
 
 

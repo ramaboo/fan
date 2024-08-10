@@ -2,6 +2,7 @@
 
 void menuSetup();
 void menuLoad();
+void menuReset();
 
 String menuValueText();
 String menuTitleText();
