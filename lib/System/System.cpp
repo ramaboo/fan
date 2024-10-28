@@ -52,6 +52,14 @@ void mistOn(uint64_t timeout) {
   systemMistTimeout = std::max(timeout, systemMistTimeout);
   relayMistOn();
   relayPumpOn();
+
+  if (systemMistTimeout > systemFanTimeout) {
+    systemFanTimeout = systemMistTimeout;
+  }
+
+  if (isFanOff()) {
+    fanOn(systemFanTimeout);
+  }
 }
 
 void mistOff() {
