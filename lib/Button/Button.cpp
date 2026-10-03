@@ -25,7 +25,6 @@
 
 #define BUTTON_PIN 32
 
-#define DISPLAY_TIMEOUT 2000
 
 OneButton btnStop = OneButton(BUTTON_STOP, true, false);
 OneButton btnStart = OneButton(BUTTON_START, true, false);
@@ -35,27 +34,28 @@ OneButton btnUser = OneButton(BUTTON_USER, true, false);
 OneButton btnR1 = OneButton(BUTTON_R1, true, false);
 OneButton btnR2 = OneButton(BUTTON_R2, true, false);
 
+static void logEvent(const String &event) {
+  Serial.println("Button: " + event);
+  setDebugText(event, DISPLAY_TIMEOUT);
+}
+
 void upClick() {
-  Serial.println("Button Up: Click");
-  setDebugText("Up Click", DISPLAY_TIMEOUT);
+  logEvent("Up Click");
   menuUpClick();
 }
 
 void downClick() {
-  Serial.println("Button Down: Click");
-  setDebugText("Down Click", DISPLAY_TIMEOUT);
+  logEvent("Down Click");
   menuDownClick();
 }
 
 void goClick() {
-  Serial.println("Button Go: Click");
-  setDebugText("Go Click", DISPLAY_TIMEOUT);
+  logEvent("Go Click");
   menuGoClick();
 }
 
 void goHold() {
-  Serial.println("Button Go: Hold");
-  setDebugText("Go Hold", DISPLAY_TIMEOUT);
+  logEvent("Go Hold");
   menuGoHold();
 }
 
@@ -66,49 +66,39 @@ Button btnDown = Button(2400, &downClick);
 Button btnGo = Button(3400, &goClick, &goHold);
 
 void stopClick() {
-  Serial.println("Button Stop: Click");
-  setDebugText("Stop Click", DISPLAY_TIMEOUT);
+  logEvent("Stop Click");
   fanOff();
   pumpOff();
   lightOff();
-  mistOff();
-  pumpOff();
 }
 
 void stopHold() {
-  Serial.println("Button Stop: Hold");
-  setDebugText("Stop Hold", DISPLAY_TIMEOUT);
+  logEvent("Stop Hold");
   fanOff();
   pumpOff();
   lightOff();
-  mistOff();
-  pumpOff();
   auxOff();
 }
 
 void startClick() {
-  Serial.println("Button Start: Click");
-  setDebugText("Start Click", DISPLAY_TIMEOUT);
+  logEvent("Start Click");
   fanOn(getFanTimeout());
   auxOn();
 }
 
 void startHold() {
-  Serial.println("Button Start: Hold");
-  setDebugText("Start Hold", DISPLAY_TIMEOUT);
+  logEvent("Start Hold");
   fanOn(getFanHoldTimeout());
   auxOn();
 }
 
 void lightClick() {
-  Serial.println("Button Light: Click");
-  setDebugText("Light Click", DISPLAY_TIMEOUT);
+  logEvent("Light Click");
   lightToggle();
 }
 
 void mistClick() {
-  Serial.println("Button Mist: Click");
-  setDebugText("Mist Click", DISPLAY_TIMEOUT);
+  logEvent("Mist Click");
 
   if (isMistOff()) {
     mistOn(getMistTimeout());
@@ -118,29 +108,24 @@ void mistClick() {
 }
 
 void mistHold() {
-  Serial.println("Button Mist: Hold");
-  setDebugText("Mist Hold", DISPLAY_TIMEOUT);
+  logEvent("Mist Hold");
   mistOn(getMistHoldTimeout());
 }
 
 void userClick() {
-  Serial.println("Button User: Click");
-  setDebugText("User Click", DISPLAY_TIMEOUT);
+  logEvent("User Click");
 
   fanOn(getFanUserTimeout());
   mistOn(getMistUserTimeout());
 }
 
 void userHold() {
-  Serial.println("Button User: Hold");
-  setDebugText("User Hold", DISPLAY_TIMEOUT);
+  logEvent("User Hold");
   fanOff();
-  mistOff();
 }
 
 void r1Click() {
-  Serial.println("Button R1: Click");
-  setDebugText("R1 Click", DISPLAY_TIMEOUT);
+  logEvent("R1 Click");
 
   if (isMistOff()) {
     mistOn(getMistRemoteTimeout());
@@ -150,8 +135,7 @@ void r1Click() {
 }
 
 void r2Click() {
-  Serial.println("Button R2: Click");
-  setDebugText("R2 Click", DISPLAY_TIMEOUT);
+  logEvent("R2 Click");
 
   if (isFanOff()) {
     fanOn(getFanRemoteTimeout());
@@ -230,12 +214,12 @@ void debugInputs() {
     Serial.println("Button: User");
   }
 
-  if (digitalRead(BUTTON_R2) == LOW) {
-    Serial.println("Button: R2");
-  }
-
   if (digitalRead(BUTTON_R1) == LOW) {
     Serial.println("Button: R1");
+  }
+
+  if (digitalRead(BUTTON_R2) == LOW) {
+    Serial.println("Button: R2");
   }
 
   debugAnalogButton();

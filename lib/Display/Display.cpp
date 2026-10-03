@@ -11,22 +11,37 @@
 #define OLED_RESET -1
 #define SDA 16
 #define SCL 17
+#define DISPLAY_ADDRESS 0x3C
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+bool displayReady = false;
 String displayDebugText = "";
 uint64_t displayDebugTimeout = 0;
 
 void displaySetup() {
   Serial.println("Display: Setup");
   Wire.begin(SDA, SCL);
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+
+  Wire.beginTransmission(DISPLAY_ADDRESS);
+  if (Wire.endTransmission() != 0) {
+    Serial.println("Display: Not Found");
+  }
+
+  // begin() only fails if the frame buffer can't be allocated; drawing without it would crash.
+  if (!display.begin(SSD1306_SWITCHCAPVCC, DISPLAY_ADDRESS)) {
+    Serial.println("Display: Failed");
+    return;
+  }
+
+  displayReady = true;
   display.cp437(true);
   display.clearDisplay();
   display.display();
 }
 
 void debugDisplay() {
+  if (!displayReady) return;
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
@@ -58,6 +73,7 @@ void displayTimeout() {
 
 void displayLoop() {
   displayTimeout();
+  if (!displayReady) return;
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);

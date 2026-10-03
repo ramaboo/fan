@@ -11,12 +11,10 @@
 #define RELAY_FAN R1
 #define RELAY_PUMP R0
 #define RELAY_MIST R3
-#define RELAY_LIGHT R5
 #define RELAY_AUX R4
+#define RELAY_LIGHT R5
 
 #define RELAY_CYCLE_DELAY_TIME 5000
-
-#define DISPLAY_TIMEOUT 2000
 
 void relayFanOn() {
   Serial.println("Relay: Fan On");
@@ -158,16 +156,16 @@ void cycleRelays() {
   Serial.println("Relay 3 (Mist): Off");
   digitalWrite(R3, LOW);
   delay(RELAY_CYCLE_DELAY_TIME);
-  Serial.println("Relay 4 (Light): On");
+  Serial.println("Relay 4 (Aux): On");
   digitalWrite(R4, HIGH);
   delay(RELAY_CYCLE_DELAY_TIME);
-  Serial.println("Relay 4 (Light): Off");
+  Serial.println("Relay 4 (Aux): Off");
   digitalWrite(R4, LOW);
   delay(RELAY_CYCLE_DELAY_TIME);
-  Serial.println("Relay 5 (Aux): On");
+  Serial.println("Relay 5 (Light): On");
   digitalWrite(R5, HIGH);
   delay(RELAY_CYCLE_DELAY_TIME);
-  Serial.println("Relay 5 (Aux): Off");
+  Serial.println("Relay 5 (Light): Off");
   digitalWrite(R5, LOW);
   delay(RELAY_CYCLE_DELAY_TIME);
 }

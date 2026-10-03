@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Preferences.h>
+#include <Menu.h>
 
-#define NUM_ITEMS 9
 #define MAX_TIMEOUT 10800
 
 Preferences prefs;
@@ -15,7 +15,21 @@ struct menuStruct {
   boolean display;
 };
 
-menuStruct menuItems[NUM_ITEMS] = {
+// Must match the row order of menuItems.
+enum MenuItem : uint8_t {
+  MENU_BUNNY,
+  MENU_FAN,
+  MENU_MIST,
+  MENU_FAN_USER,
+  MENU_MIST_USER,
+  MENU_FAN_HOLD,
+  MENU_MIST_HOLD,
+  MENU_FAN_REMOTE,
+  MENU_MIST_REMOTE,
+  MENU_COUNT
+};
+
+menuStruct menuItems[] = {
   {"8-BIT BUNNY", "bunny", 0, 0, 0, false},
   {"Fan", "fan", 0, 3600, 60, true},
   {"Mist", "mist", 0, 300, 10, true},
@@ -27,38 +41,45 @@ menuStruct menuItems[NUM_ITEMS] = {
   {"Mist Remote", "mist_remote", 0, 300, 10, true},
 };
 
+const uint8_t NUM_ITEMS = sizeof(menuItems) / sizeof(menuItems[0]);
+static_assert(NUM_ITEMS == MENU_COUNT, "MenuItem enum is out of sync with menuItems");
+
 uint8_t menuIndex = 0;
 
+uint64_t getItemTimeoutMs(MenuItem item) {
+  return menuItems[item].timeout * 1000;
+}
+
 uint64_t getFanTimeout() {
-  return menuItems[1].timeout * 1000;
+  return getItemTimeoutMs(MENU_FAN);
 }
 
 uint64_t getMistTimeout() {
-  return menuItems[2].timeout * 1000;
+  return getItemTimeoutMs(MENU_MIST);
 }
 
 uint64_t getFanUserTimeout() {
-  return menuItems[3].timeout * 1000;
+  return getItemTimeoutMs(MENU_FAN_USER);
 }
 
 uint64_t getMistUserTimeout() {
-  return menuItems[4].timeout * 1000;
+  return getItemTimeoutMs(MENU_MIST_USER);
 }
 
 uint64_t getFanHoldTimeout() {
-  return menuItems[5].timeout * 1000;
+  return getItemTimeoutMs(MENU_FAN_HOLD);
 }
 
 uint64_t getMistHoldTimeout() {
-  return menuItems[6].timeout * 1000;
+  return getItemTimeoutMs(MENU_MIST_HOLD);
 }
 
 uint64_t getFanRemoteTimeout() {
-  return menuItems[7].timeout * 1000;
+  return getItemTimeoutMs(MENU_FAN_REMOTE);
 }
 
 uint64_t getMistRemoteTimeout() {
-  return menuItems[8].timeout * 1000;
+  return getItemTimeoutMs(MENU_MIST_REMOTE);
 }
 
 void debugMenu() {
@@ -94,6 +115,10 @@ void menuGoHold() {
 }
 
 void menuUpClick() {
+  if (!menuItems[menuIndex].display) {
+    return;
+  }
+
   menuItems[menuIndex].timeout = menuItems[menuIndex].timeout + menuItems[menuIndex].increment;
 
   if (menuItems[menuIndex].timeout > MAX_TIMEOUT) {
@@ -104,6 +129,10 @@ void menuUpClick() {
 }
 
 void menuDownClick() {
+  if (!menuItems[menuIndex].display) {
+    return;
+  }
+
   menuItems[menuIndex].timeout = menuItems[menuIndex].timeout - menuItems[menuIndex].increment;
 
   if (menuItems[menuIndex].timeout < 0) {
@@ -113,7 +142,7 @@ void menuDownClick() {
   prefs.putInt(menuItems[menuIndex].key, menuItems[menuIndex].timeout);
 }
 
-int32_t getTimeout(menuStruct item) {
+int32_t getTimeout(const menuStruct& item) {
   return prefs.getInt(item.key, item.defaultTimeout);
 }
 
@@ -138,7 +167,7 @@ String secondsToTime(int32_t seconds) {
   int32_t secs = seconds % 60;
 
   char buffer [10];
-  sprintf(buffer, "%02d:%02d:%02d", hours, minutes, secs);
+  snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d", hours, minutes, secs);
   return String(buffer);
 }
 

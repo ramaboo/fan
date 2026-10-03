@@ -9,12 +9,13 @@
 
 void setup() {
   systemSetup();
+  relaySetup();
+  relayAllOff();
+  auxOn();
   menuSetup();
   // menuReset();
   displaySetup();
   buttonSetup();
-  relaySetup();
-  menuLoad();
 }
 
 void loop() {

@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#include <Display.h>
-#include <Button.h>
 #include <Relay.h>
 #include <System.h>
 
@@ -8,6 +6,11 @@ uint64_t systemFanTimeout = 0;
 uint64_t systemMistTimeout = 0;
 
 void fanOn(uint64_t timeout) {
+  if (timeout == 0) {
+    Serial.println("System: Fan Skipped");
+    return;
+  }
+
   Serial.println("System: Fan On");
   timeout = timeout + millis();
 
@@ -49,6 +52,11 @@ void lightToggle() {
 }
 
 void mistOn(uint64_t timeout) {
+  if (timeout == 0) {
+    Serial.println("System: Mist Skipped");
+    return;
+  }
+
   Serial.println("System: Mist On");
   timeout = timeout + millis();
 

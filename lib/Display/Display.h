@@ -1,5 +1,9 @@
 #pragma once
 
+#include <Arduino.h>
+
+#define DISPLAY_TIMEOUT 2000
+
 void displaySetup();
 void displayLoop();
 

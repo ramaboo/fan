@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 void menuSetup();
 void menuLoad();
 void menuReset();
