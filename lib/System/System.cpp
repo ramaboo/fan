@@ -2,6 +2,7 @@
 #include <Display.h>
 #include <Button.h>
 #include <Relay.h>
+#include <System.h>
 
 uint64_t systemFanTimeout = 0;
 uint64_t systemMistTimeout = 0;
@@ -18,6 +19,8 @@ void fanOff() {
   Serial.println("System: Fan Off");
   systemFanTimeout = 0;
   relayFanOff();
+
+  mistOff();
 }
 
 void pumpOn() {
@@ -58,7 +61,8 @@ void mistOn(uint64_t timeout) {
   }
 
   if (isFanOff()) {
-    fanOn(systemFanTimeout);
+    Serial.println("System: Fan On");
+    relayFanOn();
   }
 }
 
@@ -88,7 +92,6 @@ void systemTimeout() {
   if (systemMistTimeout > 0 && now > systemMistTimeout) {
     Serial.println("System: Mist Timeout");
     mistOff();
-    pumpOff();
   }
 }
 
@@ -96,11 +99,20 @@ void systemLoop() {
   systemTimeout();
 }
 
+static uint64_t secondsLeft(uint64_t deadline) {
+  uint64_t now = millis();
+  if (now >= deadline) {
+    return 0;
+  }
+
+  return (deadline - now) / 1000;
+}
+
 String defaultFanText() {
   String timeLeft;
 
   if (systemFanTimeout > 0) {
-    timeLeft = String((systemFanTimeout - millis()) / 1000);
+    timeLeft = String(secondsLeft(systemFanTimeout));
   } else {
     timeLeft = "Off";
   }
@@ -112,7 +124,7 @@ String defaultMistText() {
   String timeLeft;
 
   if (systemMistTimeout > 0) {
-    timeLeft = String((systemMistTimeout - millis()) / 1000);
+    timeLeft = String(secondsLeft(systemMistTimeout));
   } else {
     timeLeft = "Off";
   }
@@ -123,6 +135,5 @@ String defaultMistText() {
 void systemSetup() {
   Serial.begin(115200);
   Serial.println("System: Setup");
-  auxOn();
 }
 
