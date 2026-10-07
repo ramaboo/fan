@@ -78,6 +78,7 @@ void mistOff() {
   Serial.println("System: Mist Off");
   systemMistTimeout = 0;
   relayMistOff();
+  pumpOff();
 }
 
 void auxOn() {

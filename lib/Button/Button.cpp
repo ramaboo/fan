@@ -40,22 +40,22 @@ static void logEvent(const String &event) {
 }
 
 void upClick() {
-  logEvent("Up Click");
+  logEvent("Button: Up Click");
   menuUpClick();
 }
 
 void downClick() {
-  logEvent("Down Click");
+  logEvent("Button: Down Click");
   menuDownClick();
 }
 
 void goClick() {
-  logEvent("Go Click");
+  logEvent("Button: Go Click");
   menuGoClick();
 }
 
 void goHold() {
-  logEvent("Go Hold");
+  logEvent("Button: Go Hold");
   menuGoHold();
 }
 
@@ -66,39 +66,38 @@ Button btnDown = Button(2400, &downClick);
 Button btnGo = Button(3400, &goClick, &goHold);
 
 void stopClick() {
-  logEvent("Stop Click");
+  logEvent("Button: Stop Click");
   fanOff();
-  pumpOff();
-  lightOff();
+  mistOff();
 }
 
 void stopHold() {
-  logEvent("Stop Hold");
+  logEvent("Button: Stop Hold");
   fanOff();
-  pumpOff();
+  mistOff();
   lightOff();
   auxOff();
 }
 
 void startClick() {
-  logEvent("Start Click");
+  logEvent("Button: Start Click");
   fanOn(getFanTimeout());
   auxOn();
 }
 
 void startHold() {
-  logEvent("Start Hold");
+  logEvent("Button: Start Hold");
   fanOn(getFanHoldTimeout());
   auxOn();
 }
 
 void lightClick() {
-  logEvent("Light Click");
+  logEvent("Button: Light Click");
   lightToggle();
 }
 
 void mistClick() {
-  logEvent("Mist Click");
+  logEvent("Button: Mist Click");
 
   if (isMistOff()) {
     mistOn(getMistTimeout());
@@ -108,24 +107,24 @@ void mistClick() {
 }
 
 void mistHold() {
-  logEvent("Mist Hold");
+  logEvent("Button: Mist Hold");
   mistOn(getMistHoldTimeout());
 }
 
 void userClick() {
-  logEvent("User Click");
+  logEvent("Button: User Click");
 
   fanOn(getFanUserTimeout());
   mistOn(getMistUserTimeout());
 }
 
 void userHold() {
-  logEvent("User Hold");
+  logEvent("Button: User Hold");
   fanOff();
 }
 
 void r1Click() {
-  logEvent("R1 Click");
+  logEvent("Button: R1 Click");
 
   if (isMistOff()) {
     mistOn(getMistRemoteTimeout());
@@ -135,7 +134,7 @@ void r1Click() {
 }
 
 void r2Click() {
-  logEvent("R2 Click");
+  logEvent("Button: R2 Click");
 
   if (isFanOff()) {
     fanOn(getFanRemoteTimeout());
